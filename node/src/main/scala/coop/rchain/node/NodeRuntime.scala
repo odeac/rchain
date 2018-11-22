@@ -32,6 +32,7 @@ import coop.rchain.node.diagnostics._
 import coop.rchain.p2p.effects._
 import coop.rchain.rholang.interpreter.Runtime
 import coop.rchain.shared._
+import coop.rchain.node._
 
 import kamon._
 import kamon.zipkin.ZipkinReporter
@@ -261,8 +262,6 @@ class NodeRuntime private[node] (
           }
         } *> exit0.as(Right(()))
     )
-
-  private def syncEffect = cats.effect.Sync.catsEitherTSync[Task, CommError]
 
   private val rpClearConnConf = ClearConnetionsConf(
     conf.server.maxNumOfConnections,

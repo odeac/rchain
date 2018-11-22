@@ -14,6 +14,8 @@ object Dependencies {
   val catsCore            = "org.typelevel"              %% "cats-core"                 % "1.4.0"
   val catsEffect          = "org.typelevel"              %% "cats-effect"               % "1.0.0"
   val catsMtl             = "org.typelevel"              %% "cats-mtl-core"             % "0.4.0"
+  val catsEffectLaws      = "org.typelevel"              %% "cats-effect-laws"          % "1.1.0-M1" % Test
+  val catsTestKit         = "org.typelevel"              %% "cats-testkit"              % "1.4.0" % Test
   val circeCore           = "io.circe"                   %% "circe-core"                % circeVersion
   val circeGeneric        = "io.circe"                   %% "circe-generic"             % circeVersion
   val circeGenericExtras  = "io.circe"                   %% "circe-generic-extras"      % circeVersion
@@ -85,7 +87,7 @@ object Dependencies {
 
   private val kindProjector = compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.8")
 
-  private val testing = Seq(scalactic, scalatest, scalacheck)
+  private val testing = Seq(scalactic, scalatest, scalacheck, catsTestKit, catsEffectLaws)
 
   private val logging = Seq(scalaLogging, logbackClassic)
 

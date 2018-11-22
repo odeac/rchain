@@ -1,12 +1,11 @@
 package coop.rchain
 
 import cats.data.EitherT
+import cats.effect.Sync
 import cats.syntax.applicative._
-
 import coop.rchain.catscontrib.Catscontrib._
 import coop.rchain.catscontrib.eitherT._
 import coop.rchain.comm.CommError
-
 import monix.eval.Task
 
 package object node {
@@ -21,4 +20,6 @@ package object node {
   implicit class TaskEffectOps[A](t: Task[A]) {
     def toEffect: Effect[A] = t.liftM[CommErrT]
   }
+
+  implicit val syncEffect: Sync[Effect] = Sync.catsEitherTSync[Task, CommError]
 }
