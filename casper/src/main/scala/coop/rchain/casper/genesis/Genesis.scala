@@ -59,7 +59,6 @@ object Genesis {
       StandardDeploys.nonNegativeNumber,
       StandardDeploys.makeMint,
       StandardDeploys.makePoS,
-      StandardDeploys.PoS,
       StandardDeploys.basicWallet,
       StandardDeploys.basicWalletFaucet,
       StandardDeploys.walletCheck,
@@ -69,7 +68,7 @@ object Genesis {
       StandardDeploys.rev(wallets, faucetCode, posParams),
       StandardDeploys.revVault,
       StandardDeploys.revGenerator(genesisPk, vaults, supply),
-      StandardDeploys.poSGenerator(genesisPk, posParams)
+      StandardDeploys.poSGenerator(posParams)
     ) ++ posParams.validators.map { validator =>
       DeployData(
         deployer = ByteString.copyFrom(validator.pk.bytes),
