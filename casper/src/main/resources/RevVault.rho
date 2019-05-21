@@ -13,7 +13,7 @@
 // 9.  | 4,         | registry           | uri = rho:id:1o93uitkrjfubh43jt19owanuezhntag5wh74c6ur5feuotpi73q8z
 // ----+------------+--------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------
 new
-  RevVault, rs(`rho:registry:insertSigned:ed25519`), uriOut,
+  RevVault, rs(`rho:registry:insertSigned:ed25519`), uriOut, stdout(`rho:io:stdout`),
   rl(`rho:registry:lookup`), RevAddress(`rho:rev:address`), MakeMintCh, AuthKeyCh, EitherCh,
   _getIdentity,
   _makeVault,
@@ -52,6 +52,7 @@ in {
           new getDeployData(`rho:deploy:params`), ch in {
             getDeployData ! (*ch) |
             for (_, _, @userId, _ <- ch) {
+              stdout!({"userId":userId}) |
               retCh ! (userId)
             }
           }

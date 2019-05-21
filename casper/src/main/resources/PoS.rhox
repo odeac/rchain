@@ -44,12 +44,14 @@ new PoS, stdout(`rho:io:stdout`),
           } |
 
           contract PoS (@"bond", @amount, returnCh) = {
+            stdout!("bonding...") |
             new userCh, depositCh, processCh in {
               runMVar!(*bondsCh, *processCh, *returnCh) |
 
               getUser!(*userCh) |
               for(@bonds, resultCh <- processCh;
                   @userPk <- userCh) {
+                    stdout!({"bonding user": userPk})|
                 if (bonds.contains(userPk)) {
                   resultCh!(bonds, (false, "Public key is already bonded."))
                 } else if (amount < $$minimumBond$$) {
@@ -57,6 +59,7 @@ new PoS, stdout(`rho:io:stdout`),
                 } else if (amount > $$maximumBond$$) {
                   resultCh!(bonds, (false, "Bond is greater than maximum!"))
                 } else {
+                  stdout!("calling deposit...") |
                   deposit!(userPk, amount, *depositCh) |
                   for(@depositResult <- depositCh) {
                     match depositResult {
@@ -91,12 +94,16 @@ new PoS, stdout(`rho:io:stdout`),
           new vaultCh,
               revAddressCh,
               authKeyCh in {
-            @RevVault!("deployerAuthKey", *authKeyCh) |
-            for (@authKey <- authKeyCh) {
-              revAddressOps!("fromPublicKey", fromUserPk, *revAddressCh) |
-              for (@fromRevAddress <- revAddressCh) {
-                @RevVault!("findOrCreate", fromRevAddress, *vaultCh) |
-                for (@(true, fromVault) <- vaultCh) {
+            revAddressOps!("fromPublicKey", fromUserPk, *revAddressCh) |
+            for (@fromRevAddress <- revAddressCh) {
+              stdout!({"fromRevAddress" : fromRevAddress}) |
+              @RevVault!("findOrCreate", fromRevAddress, *vaultCh) |
+              for (@(true, fromVault) <- vaultCh) {
+                stdout!({"fromRevAddress" : fromRevAddress, "fromVault":fromVault}) |
+                stdout!("calling deployerAuthKey...") |
+                @RevVault!("deployerAuthKey", *authKeyCh) |
+                for (@authKey <- authKeyCh) {
+                  stdout!("calling transfer...") |
                   @fromVault!("transfer", posRevAddress, amount, authKey, *returnCh)
                 }
               }
